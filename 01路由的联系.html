@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>路由</title>
+  <!-- 首先引包 -->
+  <script src = 'vue.min.js'></script>
+ 
+  <script src = 'vue-router.min.js'></script>
+  <style>
+    .v-link-active{
+      font-size: 20px;
+      color: #f60;
+    }
+  </style>
+</head>
+<body>
+  <div id="box">
+    <ul>
+      <li>
+        <a v-link="{path:'/home'}"></a>
+        <a v-link="{path:'/news'}"></a>
+      </li>
+    </ul>
+    <div>
+      <router-view></router-view>
+    </div>
+  </div>
+  
+</body>
+</html>
+
+
+<!-- 关于主页的页面 -->
+<template id="home">
+  <h3>我是主页</h3>
+  <div>
+    <a v-link = "{{path:'/home/login/zns'}}">登录</a>
+    <a v-link = "{{path:'/home/reg/strive'}}">注册</a>
+  </div>
+  <div>
+    <router-view></router-view>
+  </div>
+</template>
+
+<!-- 关于新闻的页面 -->
+<template id="news">
+  <div>
+    <a v-link = "{{path:'/news/detail/001'}}">新闻</a>
+    <a v-link = "{{path:'/news/detail/002'}}">体育</a>
+  </div>
+  <div>
+    <router-view></router-view>
+  </div>
+
+</template>
+
+<!-- 数据的模板 -->
+<template id="detail">
+  {{$route.params | json}}
+  <br>
+  {{$route.path | json}}
+  <br>
+  {{$route.query | josn}}
+</template>
+<script>
+  //1,准备一个根组件,extend()添加组件
+  var App = Vue.extend();
+  // 2.Home news组件都准备好
+  var Home = Vue.extend({
+      template:'#home'
+  })
+  var news = Vue.extend({
+      template:'#news'
+  })
+  var detail = Vue.extend({
+      template:'#detail'
+  })
+  // 3,准备路由
+  var router = new VueRouter();
+
+  // 4，关联
+  router.map({
+      'home':{
+          components:Home
+        }
+      })
+          //又一个层级
+          /*subRoutes:{
+            'login/:name':{
+                component:{
+                   template:'<strong>我是登录信息{{$route.params | json }}</strong>'
+                }
+            },
+            'reg':{
+               component:{
+                  template:'<strong></strong>'
+               }
+            }
+          }
+      // }
+      'news':{
+          components:news,
+          subRoutes:{
+              '/detail/:id':{
+                  components:detail
+              }
+          }
+      }*/
+
+  //5,启动路由
+  router.start(App,'#box');
+  //6，跳转
+/*  router.redirect({
+      '/':'home'
+  })*/
+
+
+</script>
